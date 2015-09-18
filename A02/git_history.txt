@@ -1,0 +1,230 @@
+	Git allows contributors to get a project from a remote location, make changes and
+submit their changes while not walking over other contributor's changes.  It also allows you
+to go back to an earlier version of the code base which you can create 'branches' of, to work
+on multiple changes on the same machine.
+
+	The staging area is where the changes that have been commited and are ready to be submitted
+are stored.  It acts as a separate storage for files, before they are pushed up and merged to
+remote branches.
+
+	The local repo is a version of the remote project on your local machine that allows you to
+make changes and run the project. It can be different from the remote project because they are two separate entities
+and there are various ways to keep them in their different states, such as using the .gitignore file,
+locally and keeping various commiters away from certain projects by making them private.  
+Using other systems on top of git, like Gerrit, can create an environment where a others are required 
+to approve the changes before they are allowed to be merged into origin/master.
+
+	GitHub is a web based hosting site for git repositories.  There are extra features built into
+it, as well.  GitHub is basically a GUI for git, which is command line only.
+Users have accounts and can store their local projects, to easily share with others and excersize 
+source control.
+
+	I am a hugge fan of source control because it allows us to keep the code in a working order even
+when many hands touch the same piece of it and it allows me to go back in time, in my code and easily too.
+I'm a very beginner developer and being able to do this has saved me quite a few hours, already.
+
+
+***********************************************************************************
+***********************************************************************************
+**********************************GIT HISTORY************************************** 
+***********************************************************************************
+***********************************************************************************
+git log -p --pretty=format:"%h %s" --graph > questions_and_git_history.txt
+*   04c6fc1 Initial Commit-remove byebug from hangman.rb
+|\  
+| * 88c4018 Initial commit|   
+|   diff --git a/.gitignore b/.gitignore
+|   new file mode 100644
+|   index 0000000..28f4849
+|   --- /dev/null
+|   +++ b/.gitignore
+|   @@ -0,0 +1,35 @@
+|   +*.gem
+|   +*.rbc
+|   +/.config
+|   +/coverage/
+|   +/InstalledFiles
+|   +/pkg/
+|   +/spec/reports/
+|   +/test/tmp/
+|   +/test/version_tmp/
+|   +/tmp/
+|   +
+|   +## Specific to RubyMotion:
+|   +.dat*
+|   +.repl_history
+|   +build/
+|   +
+|   +## Documentation cache and generated files:
+|   +/.yardoc/
+|   +/_yardoc/
+|   +/doc/
+|   +/rdoc/
+|   +
+|   +## Environment normalisation:
+|   +/.bundle/
+|   +/vendor/bundle
+|   +/lib/bundler/man/
+|   +
+|   +# for a library or gem, you might want to ignore these files since the code is
+|   +# intended to run in multiple environments; otherwise, check them in:
+|   +# Gemfile.lock
+|   +# .ruby-version
+|   +# .ruby-gemset
+|   +
+|   +# unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
+|   +.rvmrc
+|   diff --git a/README.md b/README.md
+|   new file mode 100644
+|   index 0000000..33756a6
+|   --- /dev/null
+|   +++ b/README.md
+|   @@ -0,0 +1,2 @@
+|   +# csis-2450
+|   +Public repo of assignments from school
+
+* 07056d2 Initial Commit for csis-2450  
+  diff --git a/.gitignore b/.gitignore
+  new file mode 100644
+  index 0000000..5390964
+  --- /dev/null
+  +++ b/.gitignore
+  @@ -0,0 +1,2 @@
+  +.DS_STORE*
+  +hangman.rb.old
+  diff --git a/A01/A01.zip b/A01/A01.zip
+  new file mode 100644
+  index 0000000..ecc9a64
+  Binary files /dev/null and b/A01/A01.zip differ
+  diff --git a/A01/hangman.jpg b/A01/hangman.jpg
+  new file mode 100644
+  index 0000000..28169c7
+  Binary files /dev/null and b/A01/hangman.jpg differ
+  diff --git a/A01/hangman.rb b/A01/hangman.rb
+  new file mode 100644
+  index 0000000..758fd8d
+  --- /dev/null
+  +++ b/A01/hangman.rb
+  @@ -0,0 +1,71 @@
+  +require 'random_word_generator'
+  +require 'asciiart'
+  +
+  +class Hangman
+  +  def initialize
+  +    input = ''
+  +    until input.eql? '3'
+  +      puts 'Start (has defaults) (1) or pick a word length and number of guesses (2) or exit (3)?'
+  +      input = gets.chomp
+  +      case input
+  +      when '1'
+  +        unless @challenge_word
+  +          @challenge_word = ch_word((rand(1..4) * 3))
+  +        end
+  +        play_game
+  +      when '2'
+  +        puts "1. word length (1-12)\n2. guesses"
+  +        case gets.chomp
+  +        when '1'
+  +          puts 'chose the word length, 1 to 12'
+  +          input = gets.chomp.to_i
+  +          @challenge_word = ch_word(input)
+  +        when '2'
+  +          puts 'how many guesses do you want?'
+  +          @guesses = gets.chomp.to_i
+  +        end
+  +      end
+  +    end
+  +  end
+  +
+  +  def ch_word(word_size)
+  +    RandomWordGenerator.of_length(word_size).split(//)
+  +  end
+  +
+  +  def play_game
+  +    @guesses ||= 6
+  +    @user_guess = Array.new(@challenge_word.count, '_')
+  +    until (@guesses == 0 || !(@user_guess.any? { |l| l.eql? '_' }))
+  +      puts "\nYou have #{@guesses} guesses...Go!"
+  +      puts @user_guess.join(' ')
+  +      input = gets.chomp
+  +      find_and_replace(input)
+  +      puts @user_guess.join(' ')
+  +    end
+  +    puts "\n"
+  +    puts @challenge_word.join(' ')
+  +    puts "\n"
+  +    unless @user_guess.any? { |l| l.eql? '_' }
+  +      a=AsciiArt.new('./winner.jpg')
+  +      puts a.to_ascii_art
+  +    end
+  +    @challenge_word = nil
+  +    @guesses = nil 
+  +  end
+  +
+  +  def find_and_replace(input)
+  +    if @challenge_word.any? { |l| l.eql? input }
+  +      corrects = @challenge_word.each_index.select{ |i| @challenge_word[i] == input }
+  +      corrects.each { |i| @user_guess[i] = input }
+  +    else
+  +      if (@guesses -= 1) > 0
+  +        puts "nope...you have #{@guesses} guesses left"
+  +      else
+  +        a=AsciiArt.new('./hangman.jpg')
+  +        puts a.to_ascii_art
+  +      end
+  +    end
+  +  end
+  +end
+  +
+  +Hangman.new
+  \ No newline at end of file
+  diff --git a/A01/winner.jpg b/A01/winner.jpg
+  new file mode 100644
+  index 0000000..55a8fcd
+  Binary files /dev/null and b/A01/winner.jpg differ
+  diff --git a/A02/A02 Git.pdf b/A02/A02 Git.pdf
+  new file mode 100644
+  index 0000000..aa06daf
+  Binary files /dev/null and b/A02/A02 Git.pdf differ
+  diff --git a/Gemfile b/Gemfile
+  new file mode 100644
+  index 0000000..7585d44
+  --- /dev/null
+  +++ b/Gemfile
+  @@ -0,0 +1,5 @@
+  +source 'https://rubygems.org'
+  +
+  +gem 'random-word-generator'
+  +gem 'asciiart'
+  +gem 'byebug'
+  diff --git a/Gemfile.lock b/Gemfile.lock
+  new file mode 100644
+  index 0000000..646b72b
+  --- /dev/null
+  +++ b/Gemfile.lock
+  @@ -0,0 +1,25 @@
+  +GEM
+  +  remote: https://rubygems.org/
+  +  specs:
+  +    asciiart (0.0.9)
+  +      rainbow (= 2.0.0)
+  +      rmagick (= 2.13.4)
+  +    byebug (6.0.2)
+  +    rainbow (2.0.0)
+  +    random-word-generator (0.0.1)
+  +      sqlite3-ruby (>= 1.2.1)
+  +    rmagick (2.13.4)
+  +    sqlite3 (1.3.10)
+  +    sqlite3-ruby (1.3.3)
+  +      sqlite3 (>= 1.3.3)
+  +
+  +PLATFORMS
+  +  ruby
+  +
+  +DEPENDENCIES
+  +  asciiart
+  +  byebug
+  +  random-word-generator
+  +
+  +BUNDLED WITH
+  +   1.10.0

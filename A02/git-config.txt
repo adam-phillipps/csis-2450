@@ -1,0 +1,12 @@
+color.ui=true
+user.name=adam-phillipps
+user.email=adam.phillipps@gmail.com
+push.default=matching
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+core.ignorecase=true
+core.precomposeunicode=true
+remote.origin.url=https://github.com/adam-phillipps/csis-2450
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
