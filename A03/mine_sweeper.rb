@@ -16,7 +16,7 @@ class MineSweeper
   end
 
   def create_board(size = 20, number_of_free_spaces)
-    @board = Hash[@letters.map { |letter| [letter, Hash.new(['    ', '--'].dup)] }]
+    @board = Hash[@letters.map { |letter| [letter, Hash.new { ['    ', '--'] }] }]
     letters = @letters
     number_of_free_spaces.times { unique_insert(@letters.sample, rand(1..size)) }
   end
