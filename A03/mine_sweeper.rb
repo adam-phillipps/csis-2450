@@ -29,11 +29,11 @@ class MineSweeper
 
   def count_surrounding_bombs(move)
     count = 0
-    column_set = Set.new((1..@letters.size).to_a)
+    column_set = (1..@letters.size).to_a
     [-1,0,1].each do |row_num_modifier|
-      unless ((move[0].ord + row_num_modifier).chr =~ /\w/).nil?
+      if (@letters.include? (move[0].ord + row_num_modifier).chr)
         [-1,0,1].each do |col_num_modifier|
-          if column_set.include? (move[1].to_i + col_num_modifier)#.chr
+          if column_set.include? (move[1].to_i + col_num_modifier)
             count += 1 if @board[(move[0].ord + row_num_modifier).chr][(move[1].to_i + col_num_modifier).to_i][0].eql? 'bomb'
           end
         end
@@ -92,8 +92,9 @@ class MineSweeper
     create_board(game_info[0], game_info[0])
     until @moves == 0
       show_board 1
-      puts 'pick a square'
       @moves -= 1
+      break if @moves == 0
+      puts 'pick a square'
       input = gets.chomp
       move = [/\D+/.match(input)[0], /\d+/.match(input)[0]]
       break if bomb_in_square? move
@@ -101,34 +102,18 @@ class MineSweeper
       show_board 1
     end
     (@moves == 0) ? dramatic_win : dramatic_loss
-    # show_finished_board
     show_board 0
   end
 
   def show_board(version)
-    puts "there are #{(@letters.size**2) - @moves} bombs!"
+    puts "there are #{(@letters.size**2) - @original_moves} bombs!"
     print '   '
     (1..@letters.size).each { |num| print "#{num}".center(9) }
-    puts ''
+    puts
     @board.map do |row|
       print "#{row[0]}  "
       (1..@letters.size).each do |num|
-        print "| #{@board[row[0]][num][version]} |".center(9)
-      end
-      puts ''
-    end
-    puts "\n\n\n"
-  end
-
-  def show_finished_board
-    puts "there are #{(@letters.size**2) - @moves} bombs!"
-    print '   '
-    (1..@letters.size).each { |num| print "#{num}".center(9) }
-    puts ''
-    @board.map do |row|
-      print "#{row[0]}  "
-      (1..@letters.size).each do |num|
-        print "| #{@board[row[0]][num][0]} |".center(9)
+        print "| #{@board[row[0]][num][version].center(3)} |".center(9)
       end
       puts ''
     end
