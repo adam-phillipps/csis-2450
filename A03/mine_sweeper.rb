@@ -17,7 +17,6 @@ class MineSweeper
 
   def create_board(size = 20, number_of_free_spaces)
     @board = Hash[@letters.map { |letter| [letter, Hash.new { ['    ', '--'] }] }]
-    letters = @letters
     number_of_free_spaces.times { unique_insert(@letters.sample, rand(1..size)) }
   end
 
@@ -28,22 +27,19 @@ class MineSweeper
     @board[row][column] = ['bomb', '--']
   end
 
-  def count_surrounding_bombs(move) 
+  def count_surrounding_bombs(move)
     count = 0
     column_set = Set.new((1..@letters.size).to_a)
     [-1,0,1].each do |row_num_modifier|
       unless ((move[0].ord + row_num_modifier).chr =~ /\w/).nil?
         [-1,0,1].each do |col_num_modifier|
-          if column_set.include? (move[1].to_i + col_num_modifier).chr
-            byebug
+          if column_set.include? (move[1].to_i + col_num_modifier)#.chr
             count += 1 if @board[(move[0].ord + row_num_modifier).chr][(move[1].to_i + col_num_modifier).to_i][0].eql? 'bomb'
           end
         end
       end
     end
-    byebug
-    @board[move[0]][move[1].to_i][1] = count.to_s
-    count = 0
+    @board[move[0]][move[1].to_i] = ['    ', count.to_s]
   end
 
   def difficulty_decipher(value)
@@ -95,17 +91,18 @@ class MineSweeper
     @original_moves, @moves = game_info[1], game_info[1]
     create_board(game_info[0], game_info[0])
     until @moves == 0
-      show_board(1)
+      show_board 1
       puts 'pick a square'
       @moves -= 1
       input = gets.chomp
       move = [/\D+/.match(input)[0], /\d+/.match(input)[0]]
       break if bomb_in_square? move
       count_surrounding_bombs move
-      show_board(1)
+      show_board 1
     end
     (@moves == 0) ? dramatic_win : dramatic_loss
-    show_finished_board
+    # show_finished_board
+    show_board 0
   end
 
   def show_board(version)
