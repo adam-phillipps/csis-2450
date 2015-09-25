@@ -4,7 +4,6 @@ require 'byebug'
 class MineSweeper
   def initialize
     @input = ''
-    @difficulty_map = { 'easy' => 0.9, 'medium' => 0.5, 'hard' => 0.2 }
     until (@input =~ /(stop|exit|quit|cease|decist|terminate|die|3|kill)+/i)
       play_game
     end
@@ -15,9 +14,9 @@ class MineSweeper
     move == '' ? false : (@board[move[0]][move[1].to_i][0].eql? 'bomb')
   end
 
-  def create_board(size = 20, number_of_free_spaces)
+  def create_board(size = 20, number_of_bombs)
     @board = Hash[@letters.map { |letter| [letter, Hash.new { ['    ', '--'] }] }]
-    number_of_free_spaces.times { unique_insert(@letters.sample, rand(1..size)) }
+    number_of_bombs.times { unique_insert(@letters.sample, rand(1..size)) }
   end
 
   def unique_insert(row, column)
@@ -43,12 +42,13 @@ class MineSweeper
   end
 
   def difficulty_decipher(value)
+    difficulty_map = { 'easy' => 0.9, 'medium' => 0.5, 'hard' => 0.2 }
     if value.kind_of? String
-      if @difficulty_map.keys.include? value
-        ((@letters.size**2) * @difficulty_map[value]).floor
+      if difficulty_map.keys.include? value
+        ((@letters.size**2) * difficulty_map[value]).floor
       else
         puts 'I\'m not sure what that number is so I\'m going to pick for you'
-        ((@letters.size**2) * @difficulty_map.values.sample).floor
+        ((@letters.size**2) * difficulty_map.values.sample).floor
       end
     else
       (@letters.size**2 - value)
@@ -69,7 +69,8 @@ class MineSweeper
     puts 'Welcome to mine-sweeper.  I\'m sorry to say ' + "\n" +
           'but you might never leave \'cause of how awesome this is.' + "\n" +
           'how big of a square do you want the board to be?' "\n\n"
-    size = gets.chomp.to_i
+    @input = gets.chomp.to_i
+    size = @input
     if size.kind_of? String
       puts 'I\'m not sure what that number is so I\'m going to pick for you'
       (rand(26) * @difficulty_map.values.sample).floor
@@ -81,23 +82,22 @@ class MineSweeper
           'have from 1 bomb to board.size - 1 bombs.  Keep in mind, your ' + "\n" +
           'board will have the number you first picked squared squares.' + "\n" +
           'type stop at any time to quit.' +  "\n\n"
-    difficulty = difficulty_decipher(gets.chomp)
-    [@letters.size, difficulty]
+    @input = gets.chomp
+    spaces = difficulty_decipher(@input)
+    [@letters.size, spaces]
   end
 
   def play_game
     bomb = false
     game_info = gather_game_info
-    @original_moves, @moves = game_info[1], game_info[1]
-    create_board(game_info[0], game_info[0])
+    @bombs, @moves = (@letters.size**2 - game_info[1]), game_info[1]
+    create_board(game_info[0], @bombs)
     until @moves == 0
       show_board 1
-      @moves -= 1
-      break if @moves == 0
       puts 'pick a square'
-      input = gets.chomp
-      move = [/\D+/.match(input)[0], /\d+/.match(input)[0]]
-      break if bomb_in_square? move
+      @input = gets.chomp
+      move = [/\D+/.match(@input)[0], /\d+/.match(@input)[0]]
+      break if (bomb_in_square? move) || ((@moves -= 1) == 0)
       count_surrounding_bombs move
       show_board 1
     end
@@ -106,7 +106,7 @@ class MineSweeper
   end
 
   def show_board(version)
-    puts "there are #{(@letters.size**2) - @original_moves} bombs!"
+    puts "there are #{@bombs} bombs!"
     print '   '
     (1..@letters.size).each { |num| print "#{num}".center(9) }
     puts
