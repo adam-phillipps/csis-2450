@@ -3,6 +3,7 @@ require 'asciiart'
 require 'byebug'
 class MineSweeper
   def initialize
+    puts "\n\n\n"
     @input = ''
     until (@input =~ /(stop|exit|quit|cease|decist|terminate|die|3|kill)+/i)
       play_game
@@ -69,8 +70,9 @@ class MineSweeper
     puts 'Welcome to mine-sweeper.  I\'m sorry to say ' + "\n" +
           'but you might never leave \'cause of how awesome this is.' + "\n" +
           'how big of a square do you want the board to be?' "\n\n"
-    @input = gets.chomp.to_i
-    size = @input
+    @input = gets.chomp
+    return if (@input =~ /(stop|exit|quit|cease|decist|terminate|die|kill)+/i)
+    size = @input.to_i
     if size.kind_of? String
       puts 'I\'m not sure what that number is so I\'m going to pick for you'
       (rand(26) * @difficulty_map.values.sample).floor
@@ -83,23 +85,36 @@ class MineSweeper
           'board will have the number you first picked squared squares.' + "\n" +
           'type stop at any time to quit.' +  "\n\n"
     @input = gets.chomp
+    return if (@input =~ /(stop|exit|quit|cease|decist|terminate|die|kill)+/i)
     spaces = difficulty_decipher(@input)
     [@letters.size, spaces]
+  end
+  
+  def mark(move)
+    @board[move[0]][move[1]] = ['    ', '!']
   end
 
   def play_game
     bomb = false
     game_info = gather_game_info
+    return if game_info.nil?
     @bombs, @moves = (@letters.size**2 - game_info[1]), game_info[1]
     create_board(game_info[0], @bombs)
     until @moves == 0
       show_board 1
-      puts 'pick a square'
+      puts 'pick a square.  if you want to mark it, say "mark" or put ! in front of your move.'
       @input = gets.chomp
+      # byebug
       return if (@input =~ /(stop|exit|quit|cease|decist|terminate|die|^3|kill)+/i)
-      move = [/\D+/.match(@input)[0], /\d+/.match(@input)[0]]
-      break if (bomb_in_square? move) || ((@moves -= 1) == 0)
-      count_surrounding_bombs move
+      /(?<marked>(mark|!)?)(?<row>[a-z]{1,2})(?<col>\d+)/ =~ @input
+      # move = [/^(mark|!)/.match(@input[0]), /\D+/.match(@input)[0], /\d+/.match(@input)[0]]
+      # break if (bomb_in_square? move) || ((@moves -= 1) == 0)
+      unless marked.empty?
+        mark [row,col.to_i]
+      else
+        break if (bomb_in_square? [row,col.to_i]) || ((@moves -= 1) == 0)
+        count_surrounding_bombs [row,col.to_i]
+      end
     end
     (@moves == 0) ? dramatic_win : dramatic_loss
     show_board 0
