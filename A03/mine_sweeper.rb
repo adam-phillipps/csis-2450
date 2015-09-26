@@ -96,7 +96,7 @@ class MineSweeper
       show_board 1
       puts 'pick a square'
       @input = gets.chomp
-      return if (@input =~ /(stop|exit|quit|cease|decist|terminate|die|3|kill)+/i)
+      return if (@input =~ /(stop|exit|quit|cease|decist|terminate|die|^3|kill)+/i)
       move = [/\D+/.match(@input)[0], /\d+/.match(@input)[0]]
       break if (bomb_in_square? move) || ((@moves -= 1) == 0)
       count_surrounding_bombs move
