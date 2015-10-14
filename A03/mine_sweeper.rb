@@ -4,8 +4,10 @@ require 'byebug'
 
 class MineSweeper
   def initialize
+    @difficulty_map = { 'easy' => 0.9, 'medium' => 0.5, 'hard' => 0.2 }
     puts "\n\n\n"
     @input = ''
+    # byebug
     until (@input =~ /(stop|exit|quit|cease|decist|terminate|die|^3|kill)+/i)
       play_game
     end
@@ -37,16 +39,14 @@ class MineSweeper
   end
 
   def difficulty_decipher(value)
-    difficulty_map = { 'easy' => 0.9, 'medium' => 0.5, 'hard' => 0.2 }
-    if value.kind_of? String
-      if difficulty_map.keys.include? value
-        ((@letters.size**2) * difficulty_map[value]).floor
-      else
-        puts 'I\'m not sure what that number is so I\'m going to pick for you'
-        ((@letters.size**2) * difficulty_map.values.sample).floor
-      end
+    # byebug
+    if @difficulty_map.keys.include? value
+      ((@letters.size**2) * @difficulty_map[value]).floor
+    elsif value.to_i > 0
+      value
     else
-      (@letters.size**2 - value)
+      puts 'I\'m not sure what that number is so I\'m going to pick for you'
+      ((@letters.size**2) * @difficulty_map.values.sample).floor
     end
   end
 
@@ -65,12 +65,11 @@ class MineSweeper
     @input = gets.chomp
     return if (@input =~ /(stop|exit|quit|cease|decist|terminate|die|kill)+/i)
     size = @input.to_i
-    if size.kind_of? String
-      puts 'I\'m not sure what that number is so I\'m going to pick for you'
-      (rand(26) * @difficulty_map.values.sample).floor
+    if size.eql? 0
+      size = rand(26)
+      puts "I'm not sure what you mean so I'm going to pick for you ~> #{size}"
     end
-    size = (size <= 1) ? 1 : (size - 1)
-    @letters = ('a'..(97 + size).chr).to_a
+    @letters = ('a'..(97 + size - 1).chr).to_a
     puts 'ok, pick a level of difficulty.  you can pick easy, medium, hard or a number of bombs.' +  "\n\n"
     @input = gets.chomp
     return if (@input =~ /(stop|exit|quit|cease|decist|terminate|die|kill)+/i)
