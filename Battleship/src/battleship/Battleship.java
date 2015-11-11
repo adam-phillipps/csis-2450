@@ -1,21 +1,24 @@
 package battleship;
 import java.util.Scanner;
 import java.util.Random;
+import battleship.Board;
+import battleship.Player;
+import battleship.ShowBoard;
 
 public class Battleship 
 {
-    public static int size = 8;
+    /*public static int size = 8;
     public int[][] boardA = new int[size][size];
     public int[][] shipsA = new int[size][size];
     public int[][] boardB = new int[size][size];
-    public int[][] shipsB = new int[size][size];
+    public int[][] shipsB = new int[size][size];*/
+    Board playerABoard = new Board();
+    Board playerBBoard = new Board();
     
     Battleship()
     {
-        int[][] boardA = this.boardA;
-        int[][] shipsA = this.shipsA;
-        int[][] boardB = this.boardB;
-        int[][] shipsB = this.shipsB;
+        Board playerABoard = this.playerABoard;
+        Board playerBBoard = this.playerBBoard;
     }
 
     public static void main(String[] args)
@@ -29,15 +32,16 @@ public class Battleship
         {
             input = new Scanner(System.in);
             Battleship game1 = new Battleship();
-            setupBoard(game1.boardA, game1.boardB);
-            setupShipsAI(game1.boardB);
-            setupShipsPlayer(game1.boardA, input);
+            
+            Player.setupShipsAI(game1.playerBBoard.getBoard());
+            Player.setupShipsPlayer(game1.playerABoard.getBoard());//, input);
+            
             
             while(true)
             {
-                showBoards(game1.boardA, game1.boardB);
+                ShowBoard.showBoards(game1.playerABoard.getBoard(), game1.playerBBoard.getBoard());
                 shootPlayer(shootP, input);
-                result = hitPlayer(shootP, game1.boardB, result);
+                result = hitPlayer(shootP, game1.playerBBoard.getBoard(), result);
                 if(result >= 17)
                 {
                     System.out.println("You've sunk all the enemie's battleships!");
@@ -59,76 +63,9 @@ public class Battleship
         
     }
     
-    public static void setupShipsAI(int[][] boardB)
-    {
-        for(int i = 0; i < 5; i++)
-        {
-            boardB[0][i] = 0;
-        }
-        
-        for(int i = 0; i < 4; i++)
-        {
-            boardB[i + 1][1] = 0;
-        }
-        
-        for(int i = 0; i < 3; i++)
-        {
-            boardB[5][i + 1] = 0;
-        }
-        
-        for(int i = 0; i < 3; i++)
-        {
-            boardB[i + 3][5] = 0;
-        }
-        
-        for(int i = 0; i < 2; i++)
-        {
-            boardB[7][i + 6] = 0;
-        }
-        
-    }
     
-    public static void setupShipsPlayer(int[][] shipsA, Scanner input)
-    {
-        /*
-        int rowChoice = 0;
-        int colChoice = 0;
-        Scanner input = new Scanner(System.in);
-        
-        System.out.println("Choose where to place your ships");
-        System.out.println("Choose where to place the Carrier (5x1 ship). Row: ");
-        rowChoice = input.nextInt();
-        System.out.println("Column: ");
-        colChoice = input.nextInt();
-        System.out.println("Which direction to place the ship");
-        
-        input.close();*/
-        
-        for(int i = 0; i < 5; i++)
-        {
-            shipsA[0][i] = 0;
-        }
-        
-        for(int i = 0; i < 4; i++)
-        {
-            shipsA[i + 1][1] = 0;
-        }
-        
-        for(int i = 0; i < 3; i++)
-        {
-            shipsA[5][i + 1] = 0;
-        }
-        
-        for(int i = 0; i < 3; i++)
-        {
-            shipsA[i + 3][5] = 0;
-        }
-        
-        for(int i = 0; i < 2; i++)
-        {
-            shipsA[7][i + 6] = 0;
-        }
-    }
+    
+    
     
     public static void shootAI(int[] shootAI)
     {
@@ -198,6 +135,7 @@ public class Battleship
         return result;
     }
     
+    /*
     public static void showBoards(int[][] boardA, int[][] boardB)
     {
         //System.out.println("");
@@ -255,7 +193,9 @@ public class Battleship
         }
         
     }
+    */
     
+    /*
     public static void setupBoard(int[][] boardA, int[][] boardB)
     {
         for(int row = 0; row < size; row++)
@@ -266,6 +206,80 @@ public class Battleship
                 boardB[row][column] = -1;
             }
         }
-    }
+    }*/
     
+    /*
+    public static void setupShipsPlayer(int[][] shipsA, Scanner input)
+    {
+        /*
+        int rowChoice = 0;
+        int colChoice = 0;
+        Scanner input = new Scanner(System.in);
+        
+        System.out.println("Choose where to place your ships");
+        System.out.println("Choose where to place the Carrier (5x1 ship). Row: ");
+        rowChoice = input.nextInt();
+        System.out.println("Column: ");
+        colChoice = input.nextInt();
+        System.out.println("Which direction to place the ship");
+        
+        input.close();*//*
+        
+        for(int i = 0; i < 5; i++)
+        {
+            shipsA[0][i] = 0;
+        }
+        
+        for(int i = 0; i < 4; i++)
+        {
+            shipsA[i + 1][1] = 0;
+        }
+        
+        for(int i = 0; i < 3; i++)
+        {
+            shipsA[5][i + 1] = 0;
+        }
+        
+        for(int i = 0; i < 3; i++)
+        {
+            shipsA[i + 3][5] = 0;
+        }
+        
+        for(int i = 0; i < 2; i++)
+        {
+            shipsA[7][i + 6] = 0;
+        }
+    }
+    */
+    
+    /*
+    public static void setupShipsAI(int[][] boardB)
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            boardB[0][i] = 0;
+        }
+        
+        for(int i = 0; i < 4; i++)
+        {
+            boardB[i + 1][1] = 0;
+        }
+        
+        for(int i = 0; i < 3; i++)
+        {
+            boardB[5][i + 1] = 0;
+        }
+        
+        for(int i = 0; i < 3; i++)
+        {
+            boardB[i + 3][5] = 0;
+        }
+        
+        for(int i = 0; i < 2; i++)
+        {
+            boardB[7][i + 6] = 0;
+        }
+        
+    }
+    */
 }
