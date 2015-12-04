@@ -1,0 +1,28 @@
+<project default="run">
+	<target name="clean">
+		<delete dir="build"/>
+		<delete dir="bin"/>
+	</target>
+
+	<target name="compile">
+		<mkdir dir="build"/>
+		<javac srcdir="src" destdir="build"/>
+		<copy todir="build/battleship1410">
+			<fileset dir="src/battleship1410" excludes="*.java"/>
+		</copy>
+	</target>
+
+	<target name="jar" depends="compile">
+		<mkdir dir="bin"/>
+		<jar destfile="bin/battleship.jar" basedir="build">
+			<manifest>
+				<attribute name="Main-Class" value="battleship1410/BattleshipApp"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="run" depends="jar">
+		<java jar="bin/battleship.jar" fork="true"/>
+	</target>
+
+</project>
