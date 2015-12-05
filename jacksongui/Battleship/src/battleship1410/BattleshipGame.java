@@ -12,7 +12,7 @@ public class BattleshipGame {
 		aiShips.add(new Battleship("Sub", 3));
 		aiShips.add(new Battleship("Battle Ship", 3));
 		aiShips.add(new Battleship("Battle Ship", 3));
-		setLocations();
+		setLocations( aiShipts );
 		
 	}
 	
@@ -54,7 +54,7 @@ public class BattleshipGame {
 			System.out.println("You suck! It took you "+ numGuess +" guesses.");
 		}
 	}
-	private void setLocations(){
+	private void setLocations(ArrayList<Battleship> ships){
 		
 		Random rand = new Random();
 		ArrayList<String> locationToSet = new ArrayList<String>();
@@ -62,7 +62,7 @@ public class BattleshipGame {
 		int let, num, incl, incn;
 		String alpha = "ABCDEFG";
 		boolean worked;
-		for (int i = 0; i< aiShips.size(); i++){
+		for (int i = 0; i< ships.size(); i++){
 			worked = false;
 			start:
 				while(!worked){
@@ -78,14 +78,14 @@ public class BattleshipGame {
 						incl = 0;
 						incn = 1;
 					}
-					for (int j=0; j<aiShips.get(i).getSize(); j++){
+					for (int j=0; j<ships.get(i).getSize(); j++){
 						String loc = ""+ alpha.charAt(let)+num;
 						let += incl;
 						num += incn;
 						
-						for (int t=0; t<aiShips.size(); t++){
+						for (int t=0; t<ships.size(); t++){
 							if(t != i){
-								temp = aiShips.get(t).getLocation();
+								temp = ships.get(t).getLocation();
 								if(temp.contains(loc)){
 									worked = false;
 									continue start;
@@ -95,7 +95,7 @@ public class BattleshipGame {
 						System.out.println(loc);
 						locationToSet.add(loc);
 					}
-					aiShips.get(i).setLocation(locationToSet);
+					ships.get(i).setLocation(locationToSet);
 				}
 		}
 	}
