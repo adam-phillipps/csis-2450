@@ -12,7 +12,7 @@ public class BattleshipGame {
 		aiShips.add(new Battleship("Sub", 3));
 		aiShips.add(new Battleship("Battle Ship", 3));
 		aiShips.add(new Battleship("Battle Ship", 3));
-		setLocations( aiShipts );
+		setLocations( aiShips );
 		
 	}
 	
