@@ -5,13 +5,13 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class BattleshipGame {
-	private ArrayList<Battleship> ship = new ArrayList<Battleship>();
+	private ArrayList<Battleship> aiShips = new ArrayList<Battleship>();
 	int numGuess = 0;
 	
 	public void setUp(){
-		ship.add(new Battleship("Sub", 3));
-		ship.add(new Battleship("Battle Ship", 3));
-		ship.add(new Battleship("Battle Ship", 3));
+		aiShips.add(new Battleship("Sub", 3));
+		aiShips.add(new Battleship("Battle Ship", 3));
+		aiShips.add(new Battleship("Battle Ship", 3));
 		setLocations();
 		
 	}
@@ -24,11 +24,11 @@ public class BattleshipGame {
 		System.out.println("Enter a guess");
 		System.out.println(guess);
 		guess = guess.toUpperCase();
-		for (int i = 0; i < ship.size(); i++){
-			result = ship.get(i).check(guess);
+		for (int i = 0; i < aiShips.size(); i++){
+			result = aiShips.get(i).check(guess);
 			if(result.equals("kill")){
-				result = ("You sunk " + ship.get(i).getName());
-				ship.remove(i);
+				result = ("You sunk " + aiShips.get(i).getName());
+				aiShips.remove(i);
 				break;
 			}
 			else if(result.equals("hit")){
@@ -62,7 +62,7 @@ public class BattleshipGame {
 		int let, num, incl, incn;
 		String alpha = "ABCDEFG";
 		boolean worked;
-		for (int i = 0; i< ship.size(); i++){
+		for (int i = 0; i< aiShips.size(); i++){
 			worked = false;
 			start:
 				while(!worked){
@@ -78,14 +78,14 @@ public class BattleshipGame {
 						incl = 0;
 						incn = 1;
 					}
-					for (int j=0; j<ship.get(i).getSize(); j++){
+					for (int j=0; j<aiShips.get(i).getSize(); j++){
 						String loc = ""+ alpha.charAt(let)+num;
 						let += incl;
 						num += incn;
 						
-						for (int t=0; t<ship.size(); t++){
+						for (int t=0; t<aiShips.size(); t++){
 							if(t != i){
-								temp = ship.get(t).getLocation();
+								temp = aiShips.get(t).getLocation();
 								if(temp.contains(loc)){
 									worked = false;
 									continue start;
@@ -95,7 +95,7 @@ public class BattleshipGame {
 						System.out.println(loc);
 						locationToSet.add(loc);
 					}
-					ship.get(i).setLocation(locationToSet);
+					aiShips.get(i).setLocation(locationToSet);
 				}
 		}
 	}
