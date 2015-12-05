@@ -27,8 +27,12 @@ public class BattleshipGui extends JPanel {
 	private static final int cellSize = 40;
 	private BattleshipGrid playerGrid;
 	private BattleshipGrid opponentGrid;
+	private BattleshipGame game = new BattleshipGame();
 	
 	public BattleshipGui() throws IOException{
+		
+		game = new BattleshipGame();
+		game.setUp();
 		
 		String waterPicString = "water.jpg";
 		BufferedImage waterPic = ImageIO.read(getClass().getResource(waterPicString));
@@ -108,6 +112,7 @@ public class BattleshipGui extends JPanel {
 				if (pChngEvt.getPropertyName().equals(
 					BattleshipGrid.MOUSE_PRESSED)) {
 						textarea.append("Opponent: " + pChngEvt.getNewValue() + "\n");
+						game.play((String)pChngEvt.getNewValue());
 						opponentGrid.resetSelections();
 				}
 			}

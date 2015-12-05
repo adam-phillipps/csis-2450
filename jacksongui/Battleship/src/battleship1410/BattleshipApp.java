@@ -19,13 +19,11 @@ public class BattleshipApp {
 			}
 		}
 	public static void main(String[] args) {
-		BattleshipGame game = new BattleshipGame();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				gui();
 				//game.setUp();
 			}
 		});
-		game.setUp();
 	}
 }

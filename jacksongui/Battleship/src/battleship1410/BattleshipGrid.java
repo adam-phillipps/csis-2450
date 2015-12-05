@@ -59,7 +59,7 @@ and while researching how to build battleship*/
 		            // name to give to label if label is on the grid and not a
 		            // row or col header
 		            if (row != 0 && column != 0) {
-		               name = rowStr + " " + colStr;
+		               name = rowStr + colStr;
 		               labelMap.put(name, label);
 		            }
 		    	           

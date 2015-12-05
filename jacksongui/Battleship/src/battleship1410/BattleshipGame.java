@@ -14,36 +14,29 @@ public class BattleshipGame {
 		ship.add(new Battleship("Battle Ship", 3));
 		setLocations();
 		
-		play();	
 	}
 	
-	private void play(){
+	public void play(String guess){
 		
-		String result, guess;
-		Scanner input = new Scanner(System.in);
-		
-		while (!ship.isEmpty()){
-			
-			result = "miss";
-			numGuess++;
-			System.out.println("Enter a guess");
-			guess = input.nextLine();
-			guess = guess.toUpperCase();
-			for (int i = 0; i < ship.size(); i++){
-				result = ship.get(i).check(guess);
-				if(result.equals("kill")){
-					result = ("You sunk " + ship.get(i).getName());
-					ship.remove(i);
-					break;
-				}
-				else if(result.equals("hit")){
-					break;
-				}
+		String result;
+		result = "miss";
+		numGuess++;
+		System.out.println("Enter a guess");
+		System.out.println(guess);
+		guess = guess.toUpperCase();
+		for (int i = 0; i < ship.size(); i++){
+			result = ship.get(i).check(guess);
+			if(result.equals("kill")){
+				result = ("You sunk " + ship.get(i).getName());
+				ship.remove(i);
+				break;
 			}
-		System.out.println(result);
+			else if(result.equals("hit")){
+				break;
+			}
 		}
-		input.close();
-		finish();
+		System.out.println(result);
+		//finish();
 	}
 	
 	private void finish(){
@@ -99,6 +92,7 @@ public class BattleshipGame {
 								}
 							}
 						}
+						System.out.println(loc);
 						locationToSet.add(loc);
 					}
 					ship.get(i).setLocation(locationToSet);
